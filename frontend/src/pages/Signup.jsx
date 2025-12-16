@@ -19,7 +19,7 @@ const Signup = () => {
     setErrorMsg("");
 
     try {
-      const res = await axios.post("http://localhost:3000/user/signup", form, {
+      const res = await axios.post("https://sanctia-personality-assist-bot.vercel.app/user/signup", form, {
         withCredentials: true,
       });
 

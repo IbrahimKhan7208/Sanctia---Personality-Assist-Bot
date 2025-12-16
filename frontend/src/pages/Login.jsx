@@ -17,7 +17,7 @@ const Login = () => {
     e.preventDefault();
     setErrorMsg("");
 
-    const res = await axios.post("http://localhost:3000/user/login", form, {
+    const res = await axios.post("https://sanctia-personality-assist-bot.vercel.app/user/login", form, {
       withCredentials: true,
     });
 

@@ -46,7 +46,7 @@ const Home = () => {
   const submitHandler = async () => {
     setLoading(true);
     const response = await axios.post(
-      "https://sanctia-personality-assist-bot.vercel.app/analyze",
+      "https://sanctia-personality-assist-bot.onrender.com/analyze",
       { text },
       { withCredentials: true }
     );
@@ -54,7 +54,7 @@ const Home = () => {
 
     setResult(response.data);
 
-    const res = await axios.get("https://sanctia-personality-assist-bot.vercel.app/latest", {
+    const res = await axios.get("https://sanctia-personality-assist-bot.onrender.com/latest", {
       withCredentials: true,
     });
 
@@ -64,7 +64,7 @@ const Home = () => {
   const logOutHandler = async () => {
     if (confirm("Do You Wanna LogOut?") == true) {
       await axios.post(
-        "https://sanctia-personality-assist-bot.vercel.app/user/logout",
+        "https://sanctia-personality-assist-bot.onrender.com/user/logout",
         {},
         { withCredentials: true }
       );
@@ -74,7 +74,7 @@ const Home = () => {
 
   const getEntries = async () => {
     setLoadingEntries(true);
-    const res = await axios.get("https://sanctia-personality-assist-bot.vercel.app/entries/recent", {
+    const res = await axios.get("https://sanctia-personality-assist-bot.onrender.com/entries/recent", {
       withCredentials: true,
     });
     setLoadingEntries(false);
@@ -83,7 +83,7 @@ const Home = () => {
 
   const guardianData = async () => {
     try {
-      const res = await axios.get("https://sanctia-personality-assist-bot.vercel.app/entries/latest", {
+      const res = await axios.get("https://sanctia-personality-assist-bot.onrender.com/entries/latest", {
         withCredentials: true,
       });
 

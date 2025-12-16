@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { LuSparkles } from "react-icons/lu";
+import { Link } from "react-router-dom";
 import axios from "axios";
 
 const Login = () => {
@@ -17,9 +18,13 @@ const Login = () => {
     e.preventDefault();
     setErrorMsg("");
 
-    const res = await axios.post("https://sanctia-personality-assist-bot.vercel.app/user/login", form, {
-      withCredentials: true,
-    });
+    const res = await axios.post(
+      "https://sanctia-personality-assist-bot.onrender.com/user/login",
+      form,
+      {
+        withCredentials: true,
+      }
+    );
 
     if (res.data.error) {
       setErrorMsg(res.data.error);
@@ -74,9 +79,9 @@ const Login = () => {
 
           {/* Footer */}
           <div className="flex justify-between items-center mt-5">
-            <a href="/" className="text-indigo-400 underline cursor-pointer">
-              don’t have an account?
-            </a>
+            <Link to="/" className="text-indigo-400 underline">
+              not have an account?
+            </Link>
 
             <input
               type="submit"

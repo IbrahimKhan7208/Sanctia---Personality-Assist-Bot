@@ -1,0 +1,11 @@
+{
+  "scripts": {
+    "frontend": "cd frontend && npm install && npm run dev",
+    "backend": "cd backend && npm install && nodemon --env-file=.env app.js",
+    "dev": "concurrently \"npm run frontend\" \"npm run backend\""
+  },
+  "dependencies": {
+    "concurrently": "^9.2.1",
+    "zod": "^4.1.13"
+  }
+}

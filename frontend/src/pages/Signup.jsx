@@ -1,0 +1,112 @@
+import React from "react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { LuSparkles } from "react-icons/lu";
+import axios from "axios";
+
+const Signup = () => {
+  const [form, setform] = useState({ name: "", email: "", password: "" });
+  const [errorMsg, setErrorMsg] = useState("");
+
+  const navigate = useNavigate();
+
+  const changeHandler = (e) => {
+    setform({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    setErrorMsg("");
+
+    try {
+      const res = await axios.post("http://localhost:3000/user/signup", form, {
+        withCredentials: true,
+      });
+
+      if (res.data.error) {
+        setErrorMsg(res.data.error);
+      } else {
+        navigate("/home", { state: res.data });
+      }
+    } catch (err) {
+      setErrorMsg("Something went wrong. Try again.");
+    }
+  };
+
+  return (
+    <div className="bg-amber-50 w-full h-screen pt-5">
+      {/* Title */}
+      <div className="title tracking-tight text-center">
+        <p className="text-5xl font-bold text-purple-900 mb-3 flex justify-center gap-2">
+          <LuSparkles className="text-amber-500" /> SANCTIA
+        </p>
+        <p className="text-purple-700/60 text-lg font-semibold">
+          Start Your Human Haven
+        </p>
+      </div>
+
+      {/* Form Container */}
+      <div
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 
+                    w-1/4 p-4 bg-white rounded-xl shadow shadow-purple-400 
+                    text-purple-500 font-semibold tracking-tight"
+      >
+        <form onSubmit={submitHandler} autoComplete="off">
+          {/* Heading */}
+          <div className="flex justify-center p-2 mb-3">
+            <h1 className="text-3xl font-semibold text-purple-700 tracking-tighter">
+              Sign Up
+            </h1>
+          </div>
+
+          {/* Name */}
+          <label className="text-purple-600">Name:</label>
+          <input
+            type="text"
+            name="name"
+            placeholder="John Doe"
+            onChange={changeHandler}
+            className="mb-4 p-2 h-12 w-full border rounded-xl outline-none"
+          />
+
+          {/* Email */}
+          <label className="text-purple-600">E-Mail:</label>
+          <input
+            type="email"
+            name="email"
+            placeholder="name@example.com"
+            onChange={changeHandler}
+            className="mb-4 p-2 h-12 w-full border rounded-xl outline-none"
+          />
+
+          {/* Password */}
+          <label className="text-purple-600">Password:</label>
+          <input
+            type="password"
+            name="password"
+            onChange={changeHandler}
+            className="mb-4 p-2 h-12 w-full border rounded-xl outline-none"
+          />
+
+          {/* Actions */}
+          <div className="flex justify-between items-center mt-5">
+            <a href="/login" className="text-indigo-400 underline">
+              already have an account?
+            </a>
+
+            <input
+              type="submit"
+              value="Sign Up"
+              className="bg-purple-600 shadow shadow-purple-800 hover:bg-purple-700 duration-300 rounded-2xl py-2 px-10 text-white text-lg cursor-pointer"
+            />
+          </div>
+          {errorMsg && (
+            <p className="text-red-500 text-sm mt-3 text-right">{errorMsg}</p>
+          )}
+        </form>
+      </div>
+    </div>
+  );
+};
+
+export default Signup;

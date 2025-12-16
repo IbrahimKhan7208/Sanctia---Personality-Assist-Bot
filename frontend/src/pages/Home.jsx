@@ -25,7 +25,7 @@ const Home = () => {
 
   useEffect(() => {
     const checkAuth = async () => {
-      const res = await axios.get("http://localhost:3000/user/home", {
+      const res = await axios.get("https://sanctia-personality-assist-bot.onrender.com/user/home", {
         withCredentials: true,
       });
       if (res.data.error) {

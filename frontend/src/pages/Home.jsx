@@ -54,7 +54,7 @@ const Home = () => {
 
     setResult(response.data);
 
-    const res = await axios.get("https://sanctia-personality-assist-bot.onrender.com/latest", {
+    const res = await axios.get("https://sanctia-personality-assist-bot.onrender.com/entries/latest", {
       withCredentials: true,
     });
 

@@ -33,14 +33,7 @@ const jsonSchema = zodToJsonSchema(resultSchema, "result");
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 export async function llmCall(prompt) {
-  let userQuery = ""
-  if(prompt.length > 299){
-    userQuery = prompt
-  }
-  else{
-    userQuery = "Do Not Genrate Output"
-  }
-
+  const userQuery = prompt
 
   const completions = await groq.chat.completions.create({
     messages: [
@@ -59,16 +52,16 @@ export async function llmCall(prompt) {
                   - Do NOT change casing.
                   - Do NOT invent new enum values.
 
-                  If the input is "Do Not Genrate Output", DO NOT generate an analysis.
+                  If the input is outside this range, DO NOT generate an analysis.
                   Return the following JSON instead:
 
                   {
                     "mbti_type": "",
                     "communication_style": "",
                     "emotional_tone": "",
-                    "emotional_state": "",
-                    "sensitivity_level": "",
-                    "motivation_style": "",
+                    "emotional_state": [],
+                    "sensitivity_level": [],
+                    "motivation_style": [],
                     "strengths": [],
                     "growth_points": [],
                     "lifestyle_hint": "",

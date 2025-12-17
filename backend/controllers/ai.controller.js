@@ -9,6 +9,24 @@ export const aiController = async (req, res) => {
     res.send("Prompt required!");
   }
 
+  if (text.length < 300 || text.length > 1000) {
+    return res.json({
+      mbti_type: "",
+      communication_style: "",
+      emotional_tone: "",
+      emotional_state: "",
+      sensitivity_level: "",
+      motivation_style: "",
+      strengths: [],
+      growth_points: [],
+      lifestyle_hint: "",
+      fashion_hint: "",
+      jewelry_hint: "",
+      error:
+        "O texto precisa ter entre 300 e 1000 caracteres para uma análise precisa.",
+    });
+  }
+
   try {
     const response = await llmCall(text);
     console.log(response);

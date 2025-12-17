@@ -20,7 +20,7 @@ const Login = () => {
     setErrorMsg("");
     setLoading(true);
     const res = await axios.post(
-      "https://sanctia-personality-assist-bot.onrender.com/user/login",
+      "/api/user/login",
       form,
       {
         withCredentials: true,

@@ -22,7 +22,7 @@ const Signup = () => {
     setLoading(true);
     try {
       const res = await axios.post(
-        "https://sanctia-personality-assist-bot.onrender.com/user/signup",
+        "/api/user/signup",
         form,
         {
           withCredentials: true,

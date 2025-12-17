@@ -52,8 +52,7 @@ export async function llmCall(prompt) {
                   - Do NOT change casing.
                   - Do NOT invent new enum values.
 
-                  If the input is outside 300–1000 characters:
-                  DO NOT generate an analysis.
+                  Your task is to analyze a user's writing sample (300–1000 characters). If the input is outside this range, DO NOT generate an analysis.
                   Return the following JSON instead:
 
                   {

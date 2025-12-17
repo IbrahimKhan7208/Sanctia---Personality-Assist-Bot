@@ -102,10 +102,10 @@ const Signup = () => {
             </Link>
 
             {loading ? (
-              <p className="flex items-center gap-2 bg-purple-600 shadow shadow-purple-800 hover:bg-purple-700 duration-300 rounded-2xl p-3 cursor-pointer text-sm text-white">
+              <div className="flex items-center gap-2 bg-purple-600 shadow shadow-purple-800 hover:bg-purple-700 duration-300 rounded-2xl p-3 cursor-pointer text-sm text-white">
                 <LuLoader className="w-4 h-4 animate-spin" />
                 <p className="animate-pulse">Criando seu espaço…</p>
-              </p>
+              </div>
             ) : (
               <input
                 type="submit"

@@ -21,8 +21,8 @@ export const guardianMessage = async (req, res) => {
         console.log("Not Able To Get Latest Reflection.")
     }
 
-    const hour = new Date().getHours()
-    const type = hour < 16 ? "morning" : "evening"
+    let hour = new Date().getHours()
+    let type = hour < 16 ? "morning" : "evening"
 
     let message = ""
 

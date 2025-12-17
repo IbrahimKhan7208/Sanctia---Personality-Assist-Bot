@@ -13,19 +13,30 @@ const Login = () => {
     setform({ ...form, [e.target.name]: e.target.value });
   };
 
+  const demoHandler = async (e) => {
+    setform({ email: "demo@sanctia", password: "demo123" });
+    setErrorMsg("");
+    setLoading(true);
+    const res = await axios.post("/api/user/login", form, {
+      withCredentials: true,
+    });
+    setLoading(false);
+    if (res.data.error) {
+      setErrorMsg(res.data.error);
+    } else {
+      navigate("/home", { state: res.data });
+    }
+  };
+
   const [errorMsg, setErrorMsg] = useState("");
 
   const submitHandler = async (e) => {
     e.preventDefault();
     setErrorMsg("");
     setLoading(true);
-    const res = await axios.post(
-      "/api/user/login",
-      form,
-      {
-        withCredentials: true,
-      }
-    );
+    const res = await axios.post("/api/user/login", form, {
+      withCredentials: true,
+    });
     setLoading(false);
     if (res.data.error) {
       setErrorMsg(res.data.error);
@@ -62,6 +73,7 @@ const Login = () => {
           {/* Email */}
           <p className="text-purple-600">E-mail:</p>
           <input
+            value={form.email}
             type="email"
             name="email"
             placeholder="name@example.com"
@@ -72,6 +84,7 @@ const Login = () => {
           {/* Password */}
           <p className="text-purple-600">Senha:</p>
           <input
+            value={form.password}
             type="password"
             name="password"
             onChange={changeHandler}
@@ -101,6 +114,17 @@ const Login = () => {
             <p className="text-red-500 text-sm mt-3 text-right">{errorMsg}</p>
           )}
         </form>
+        <div className="flex-col mt-2 items-center flex">
+          <button
+            onClick={demoHandler}
+            className="bg-orange-300 rounded-xl p-3 text-purple-700 border-2 cursor-pointer hover:bg-orange-400 duration-200"
+          >
+            Try Demo
+          </button>
+          <p className="text-xs text-purple-600/60 text-center mt-2">
+            Sem cadastro. Apenas uma experiência guiada.
+          </p>
+        </div>
       </div>
     </div>
   );

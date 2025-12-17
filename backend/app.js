@@ -7,6 +7,8 @@ import entryRoute from "./routes/entry.route.js";
 import { connectDB } from "./config/db.js";
 import cookieParser from "cookie-parser";
 
+app.set("trust proxy", 1);
+
 app.use(cookieParser());
 app.use(
   cors({

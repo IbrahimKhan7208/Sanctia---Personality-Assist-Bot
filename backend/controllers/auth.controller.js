@@ -8,9 +8,8 @@ export const userSignUp = async (req, res) => {
   const existingUser = await userModel.findOne({ email });
 
   if (existingUser) {
-  return res.json({ error: "E-mail already exists" });
-}
-
+    return res.json({ error: "E-mail already exists" });
+  }
 
   bcrypt.hash(password, 10, async function (err, hash) {
     const user = await userModel.create({
@@ -19,13 +18,15 @@ export const userSignUp = async (req, res) => {
       password: hash,
     });
 
-    let token = jwt.sign({ email: req.body.email, id: user._id }, process.env.SECRET);
+    let token = jwt.sign(
+      { email: req.body.email, id: user._id },
+      process.env.SECRET
+    );
 
     res.cookie("token", token, {
       httpOnly: true,
       secure: true,
       sameSite: "none",
-      path: "/"
     });
 
     res.json({ success: true, user });
@@ -39,13 +40,15 @@ export const userLogin = async (req, res) => {
 
   bcrypt.compare(req.body.password, user.password, function (err, result) {
     if (result) {
-      let token = jwt.sign({ email: req.body.email, id: user._id }, process.env.SECRET);
+      let token = jwt.sign(
+        { email: req.body.email, id: user._id },
+        process.env.SECRET
+      );
 
       res.cookie("token", token, {
         httpOnly: true,
         secure: true,
         sameSite: "none",
-        path: "/"
       });
 
       res.json({ success: true, user });

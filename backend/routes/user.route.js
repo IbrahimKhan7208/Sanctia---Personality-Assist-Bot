@@ -7,7 +7,7 @@ router.post('/signup', userSignUp)
 router.post('/login', userLogin)
 router.post('/logout', userLogout)
 router.get('/home', isLoggedIn, (req, res)=>{
-    res.json({ok: true})
+    res.json({error: "Login First"})
 })
 
 export default router

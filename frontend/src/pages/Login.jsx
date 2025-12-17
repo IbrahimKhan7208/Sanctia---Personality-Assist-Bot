@@ -13,18 +13,33 @@ const Login = () => {
     setform({ ...form, [e.target.name]: e.target.value });
   };
 
-  const demoHandler = async (e) => {
-    setform({ email: "demo@sanctia", password: "demo123" });
+  const demoHandler = async () => {
+    const demoCredentials = {
+      email: "demo@sanctia",
+      password: "demo123",
+    };
+
+    // Update UI fields (optional but good UX)
+    setform(demoCredentials);
+
     setErrorMsg("");
     setLoading(true);
-    const res = await axios.post("/api/user/login", form, {
-      withCredentials: true,
-    });
-    setLoading(false);
-    if (res.data.error) {
-      setErrorMsg(res.data.error);
-    } else {
-      navigate("/home", { state: res.data });
+
+    try {
+      const res = await axios.post("/api/user/login", demoCredentials, {
+        withCredentials: true,
+      });
+
+      setLoading(false);
+
+      if (res.data.error) {
+        setErrorMsg(res.data.error);
+      } else {
+        navigate("/home", { state: res.data });
+      }
+    } catch (err) {
+      setLoading(false);
+      setErrorMsg("Erro ao acessar a conta de demonstração.");
     }
   };
 

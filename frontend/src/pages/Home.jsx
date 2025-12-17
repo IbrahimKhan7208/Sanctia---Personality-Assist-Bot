@@ -491,13 +491,13 @@ const Home = () => {
           href="https://forms.gle/YOUR_GOOGLE_FORM_LINK"
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-2 px-6 py-3 rounded-full bg-purple-300 hover:bg-purple-400 text-purple-900 font-medium transition-all border border-purple-200/50 hover:border-purple-300 cursor-pointer"
+          className="flex items-center gap-2 px-6 py-3 rounded-full bg-purple-300 hover:bg-purple-400 text-purple-900 font-semibold transition-all border border-purple-200/50 hover:border-purple-300 cursor-pointer"
         >
-          <VscFeedback className="text-lg" />
+          <VscFeedback className="text-xl" />
           Enviar feedback
         </a>
 
-        <p className="text-xs text-purple-700/50">
+        <p className="text-xs text-purple-700/50 mb-4">
           Não coletamos textos pessoais • Apenas feedback anônimo
         </p>
       </div>

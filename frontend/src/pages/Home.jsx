@@ -219,7 +219,7 @@ const Home = () => {
                   {entries.map((entry) => (
                     <div
                       key={entry._id}
-                      className="flex flex-col space-y-0.5 py-2 border-b border-zinc-300 last:border-0 pl-1"
+                      className="flex flex-col space-y- py-2 border-b border-zinc-300 last:border-0 pl-1"
                     >
                       <div className="flex items-center space-x-2">
                         <LuCalendar className="w-3.5 h-3.5 text-purple-400" />
@@ -469,6 +469,12 @@ const Home = () => {
             </div>
           )}
         </div>
+      </div>
+
+      <div className="border-t border-zinc-300 mt-5 mb-5"></div>
+
+      <div className="footer flex justify-center">
+        <button className="px-4 py-2 rounded-full bg-purple-300 hover:bg-purple-400 text-purple-900 font-medium transition-all border border-purple-200/50 hover:border-purple-300 disabled:opacity-50 cursor-pointer">Give Feedback</button>
       </div>
     </div>
   );

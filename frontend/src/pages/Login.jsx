@@ -19,7 +19,6 @@ const Login = () => {
       password: "demo123",
     };
 
-    // Update UI fields (optional but good UX)
     setform(demoCredentials);
 
     setErrorMsg("");
@@ -73,7 +72,7 @@ const Login = () => {
       </div>
 
       {/* Card */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-[50%] -translate-y-[50%] p-4 w-1/4 bg-white rounded-xl shadow-purple-400 shadow h-fit text-purple-500 font-semibold tracking-tight">
+      <div className="absolute mt-5 top-1/2 left-1/2 -translate-x-[50%] -translate-y-[50%] p-4 w-1/4 bg-white rounded-xl shadow-purple-400 shadow h-fit text-purple-500 font-semibold tracking-tight">
         <form onSubmit={submitHandler} autoComplete="off">
           {/* Heading */}
           <div className="p-2 mb-4">
@@ -129,6 +128,9 @@ const Login = () => {
             <p className="text-red-500 text-sm mt-3 text-right">{errorMsg}</p>
           )}
         </form>
+
+        <div className="border-t border-zinc-300 mt-5 mb-5"></div>
+
         <div className="flex-col mt-2 items-center flex">
           <button
             onClick={demoHandler}

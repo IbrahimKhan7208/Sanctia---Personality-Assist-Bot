@@ -7,9 +7,10 @@ import { TbHeartSpark } from "react-icons/tb";
 import { FiSun } from "react-icons/fi";
 import { FaRegStar } from "react-icons/fa6";
 import { CgCoffee } from "react-icons/cg";
+import { VscFeedback } from "react-icons/vsc";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
-import { ENUM_LABELS_PT } from "../enumLabels.pt.js"
+import { ENUM_LABELS_PT } from "../enumLabels.pt.js";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -63,11 +64,7 @@ const Home = () => {
 
   const logOutHandler = async () => {
     if (confirm("Do You Wanna LogOut?") == true) {
-      await axios.post(
-        "/api/user/logout",
-        {},
-        { withCredentials: true }
-      );
+      await axios.post("/api/user/logout", {}, { withCredentials: true });
       navigate("/");
     }
   };
@@ -98,11 +95,11 @@ const Home = () => {
   }, []);
 
   const handleKeyPress = (e) => {
-    if (e.key === "Enter" && !e.shiftKey){
-      e.preventDefault()
-      submitHandler()
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      submitHandler();
     }
-  }
+  };
 
   return (
     <div className=" h-screen w-full p-3">
@@ -174,14 +171,20 @@ const Home = () => {
                 Guardião Sanctia
               </p>
               {guardian ? (
-                <div >
+                <div>
                   <p className="text-purple-800 leading-relaxed">
                     {guardian.message}
                   </p>
                   <div className="border-t border-zinc-300 mt-5 mb-5"></div>
                   <div className="flex justify-between text-sm text-purple-800 bg-white p-2 rounded-xl mr-2">
                     <p className="text-purple-600">Estilo de orientação</p>
-                    <p className="">{ENUM_LABELS_PT.motivation_style[guardian.motivation_style]}</p>
+                    <p className="">
+                      {
+                        ENUM_LABELS_PT.motivation_style[
+                          guardian.motivation_style
+                        ]
+                      }
+                    </p>
                   </div>
                 </div>
               ) : (
@@ -228,7 +231,8 @@ const Home = () => {
                         </span>
                       </div>
                       <span className="text-sm text-purple-800 pl-5">
-                        {ENUM_LABELS_PT.emotional_state[entry.emotional_state]}, {entry.emotional_tone}
+                        {ENUM_LABELS_PT.emotional_state[entry.emotional_state]},{" "}
+                        {entry.emotional_tone}
                       </span>
                     </div>
                   ))}
@@ -331,7 +335,11 @@ const Home = () => {
                         Sensibilidade
                       </p>
                       <p className="text-sm text-purple-900 font-semibold">
-                        {ENUM_LABELS_PT.sensitivity_level[result.sensitivity_level]}
+                        {
+                          ENUM_LABELS_PT.sensitivity_level[
+                            result.sensitivity_level
+                          ]
+                        }
                       </p>
                     </div>
                   </div>
@@ -462,8 +470,8 @@ const Home = () => {
                   Seus insights aparecerão aqui
                 </p>
                 <p className="text-purple-700/60 max-w-xs">
-                  Compartilhe seus pensamentos no espaço de escrita
-                  e descubra os padrões que tornam você único
+                  Compartilhe seus pensamentos no espaço de escrita e descubra
+                  os padrões que tornam você único
                 </p>
               </div>
             </div>
@@ -471,10 +479,27 @@ const Home = () => {
         </div>
       </div>
 
-      <div className="border-t border-zinc-300 mt-5 mb-5"></div>
+      <div className="border-t border-zinc-300 mt-5"></div>
 
-      <div className="footer flex justify-center">
-        <button className="px-4 py-2 rounded-full bg-purple-300 hover:bg-purple-400 text-purple-900 font-medium transition-all border border-purple-200/50 hover:border-purple-300 disabled:opacity-50 cursor-pointer">Give Feedback</button>
+      <div className="footer flex flex-col items-center gap-3 m-6">
+        <div className="text-center text-sm text-purple-700/70 max-w-md leading-relaxed">
+          Sua experiência importa. Se algo não parecer certo — ou se quiser
+          compartilhar como se sentiu — estamos ouvindo.
+        </div>
+
+        <a
+          href="https://forms.gle/YOUR_GOOGLE_FORM_LINK"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-2 px-6 py-3 rounded-full bg-purple-300 hover:bg-purple-400 text-purple-900 font-medium transition-all border border-purple-200/50 hover:border-purple-300 cursor-pointer"
+        >
+          <VscFeedback className="text-lg" />
+          Enviar feedback
+        </a>
+
+        <p className="text-xs text-purple-700/50">
+          Não coletamos textos pessoais • Apenas feedback anônimo
+        </p>
       </div>
     </div>
   );

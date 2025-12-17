@@ -3,6 +3,10 @@
     {
       "source": "/api/:path*",
       "destination": "https://sanctia-personality-assist-bot.onrender.com/:path*"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/"
     }
   ]
 }

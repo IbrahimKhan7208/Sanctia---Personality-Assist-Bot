@@ -8,25 +8,12 @@ import { connectDB } from "./config/db.js";
 import cookieParser from "cookie-parser";
 
 app.use(cookieParser());
-const allowedOrigins = [
-  "http://localhost:5173",
-  "https://sanctia-personality-assist-bot.vercel.app",
-];
-
-app.use(cors({
-  origin: function (origin, callback) {
-    // allow requests with no origin (like curl, health checks)
-    if (!origin) return callback(null, true);
-
-    if (allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
-  credentials: true,
-}));
-
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL,
+    credentials: true,
+  })
+);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

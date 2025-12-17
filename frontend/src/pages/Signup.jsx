@@ -1,13 +1,14 @@
 import React from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { LuSparkles } from "react-icons/lu";
+import { LuSparkles, LuLoader } from "react-icons/lu";
 import { Link } from "react-router-dom";
 import axios from "axios";
 
 const Signup = () => {
   const [form, setform] = useState({ name: "", email: "", password: "" });
   const [errorMsg, setErrorMsg] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -18,7 +19,7 @@ const Signup = () => {
   const submitHandler = async (e) => {
     e.preventDefault();
     setErrorMsg("");
-
+    setLoading(true);
     try {
       const res = await axios.post(
         "https://sanctia-personality-assist-bot.onrender.com/user/signup",
@@ -28,6 +29,7 @@ const Signup = () => {
         }
       );
 
+      setLoading(false);
       if (res.data.error) {
         setErrorMsg(res.data.error);
       } else {
@@ -46,7 +48,7 @@ const Signup = () => {
           <LuSparkles className="text-amber-500" /> SANCTIA
         </p>
         <p className="text-purple-700/60 text-lg font-semibold">
-          Start Your Human Haven
+          Comece o seu refúgio humano
         </p>
       </div>
 
@@ -60,12 +62,12 @@ const Signup = () => {
           {/* Heading */}
           <div className="flex justify-center p-2 mb-3">
             <h1 className="text-3xl font-semibold text-purple-700 tracking-tighter">
-              Sign Up
+              Criar conta
             </h1>
           </div>
 
           {/* Name */}
-          <label className="text-purple-600">Name:</label>
+          <label className="text-purple-600">Nome:</label>
           <input
             type="text"
             name="name"
@@ -75,17 +77,17 @@ const Signup = () => {
           />
 
           {/* Email */}
-          <label className="text-purple-600">E-Mail:</label>
+          <label className="text-purple-600">E-mail:</label>
           <input
             type="email"
             name="email"
-            placeholder="name@example.com"
+            placeholder="nome@exemplo.com"
             onChange={changeHandler}
             className="mb-4 p-2 h-12 w-full border rounded-xl outline-none"
           />
 
           {/* Password */}
-          <label className="text-purple-600">Password:</label>
+          <label className="text-purple-600">Senha:</label>
           <input
             type="password"
             name="password"
@@ -96,13 +98,21 @@ const Signup = () => {
           {/* Actions */}
           <div className="flex justify-between items-center mt-5">
             <Link to="/login" className="text-indigo-400 underline">
-              já tem uma conta?
+              Já tem uma conta?
             </Link>
-            <input
-              type="submit"
-              value="Sign Up"
-              className="bg-purple-600 shadow shadow-purple-800 hover:bg-purple-700 duration-300 rounded-2xl py-2 px-10 text-white text-lg cursor-pointer"
-            />
+
+            {loading ? (
+              <p className="flex items-center gap-2 bg-purple-600 shadow shadow-purple-800 hover:bg-purple-700 duration-300 rounded-2xl p-3 cursor-pointer text-sm text-white">
+                <LuLoader className="w-4 h-4 animate-spin" />
+                <p className="animate-pulse">Criando seu espaço…</p>
+              </p>
+            ) : (
+              <input
+                type="submit"
+                value="Criar conta"
+                className="bg-purple-600 shadow shadow-purple-800 hover:bg-purple-700 duration-300 rounded-2xl py-2 px-10 text-white text-lg cursor-pointer"
+              />
+            )}
           </div>
           {errorMsg && (
             <p className="text-red-500 text-sm mt-3 text-right">{errorMsg}</p>

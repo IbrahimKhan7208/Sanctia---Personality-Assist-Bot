@@ -80,7 +80,7 @@ const Login = () => {
 
           {/* Footer */}
           <div className="flex justify-between items-center mt-5">
-            <Link to="/" className="text-indigo-400 underline">
+            <Link to="/signup" className="text-indigo-400 underline">
               Ainda não tem uma conta?
             </Link>
 

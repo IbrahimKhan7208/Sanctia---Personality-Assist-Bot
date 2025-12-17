@@ -97,7 +97,7 @@ const Signup = () => {
 
           {/* Actions */}
           <div className="flex justify-between items-center mt-5">
-            <Link to="/login" className="text-indigo-400 underline">
+            <Link to="/" className="text-indigo-400 underline">
               Já tem uma conta?
             </Link>
 

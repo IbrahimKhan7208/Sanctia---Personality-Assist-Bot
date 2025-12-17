@@ -25,6 +25,7 @@ export const userSignUp = async (req, res) => {
       httpOnly: true,
       secure: true,
       sameSite: "none",
+      path: "/"
     });
 
     res.json({ success: true, user });
@@ -44,6 +45,7 @@ export const userLogin = async (req, res) => {
         httpOnly: true,
         secure: true,
         sameSite: "none",
+        path: "/"
       });
 
       res.json({ success: true, user });

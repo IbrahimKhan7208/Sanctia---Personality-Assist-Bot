@@ -15,6 +15,8 @@ app.use(
   })
 );
 
+console.log("CORS ORIGIN:", process.env.CLIENT_URL);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

@@ -33,7 +33,14 @@ const jsonSchema = zodToJsonSchema(resultSchema, "result");
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 export async function llmCall(prompt) {
-  const userQuery = prompt;
+  let userQuery = ""
+  if(prompt.length > 299){
+    userQuery = prompt
+  }
+  else{
+    userQuery = "Do Not Genrate Output"
+  }
+
 
   const completions = await groq.chat.completions.create({
     messages: [

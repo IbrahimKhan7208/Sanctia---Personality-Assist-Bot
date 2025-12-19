@@ -96,7 +96,7 @@ const Login = () => {
       </div>
 
       {/* Card */}
-      <div className="absolute mt-5 top-1/2 left-1/2 -translate-x-[50%] -translate-y-[50%] p-4 w-fit bg-white rounded-xl shadow-purple-400 shadow h-fit text-purple-500 font-semibold tracking-tight">
+      <div className="absolute mt-5 top-1/2 left-1/2 -translate-x-[50%] -translate-y-[50%] w-full max-w-md m-2 p-4 bg-white rounded-xl shadow-purple-400 shadow h-fit text-purple-500 font-semibold tracking-tight">
         <form onSubmit={submitHandler} autoComplete="off">
           {/* Heading */}
           <div className="p-2 mb-4">

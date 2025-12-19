@@ -162,6 +162,7 @@ const Home = () => {
             <textarea
               name="text"
               id="text"
+              spellCheck={false}
               value={text}
               rows={10}
               maxLength={1000}

@@ -64,7 +64,7 @@ const Signup = () => {
       {/* Form Container */}
       <div
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 
-                    w-full max-w-md p-4
+                    w-full max-w-md m-2 p-4
                     bg-white rounded-xl shadow shadow-purple-400 
                     text-purple-500 font-semibold tracking-tight"
       >

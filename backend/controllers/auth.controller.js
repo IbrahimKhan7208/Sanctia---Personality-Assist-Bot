@@ -8,7 +8,7 @@ export const userSignUp = async (req, res) => {
   const existingUser = await userModel.findOne({ email });
 
   if (existingUser) {
-    return res.json({ error: "E-mail already exists" });
+    return res.json({ error: "Este e-mail já está cadastrado." });
   }
 
   bcrypt.hash(password, 10, async function (err, hash) {
@@ -35,7 +35,7 @@ export const userSignUp = async (req, res) => {
 export const userLogin = async (req, res) => {
   const user = await userModel.findOne({ email: req.body.email });
 
-  if (!user) return res.json({ error: "No user found" });
+  if (!user) return res.json({ error: "Não encontramos uma conta com esses dados." });
 
   bcrypt.compare(req.body.password, user.password, function (err, result) {
     if (result) {
@@ -51,7 +51,7 @@ export const userLogin = async (req, res) => {
 
       res.json({ success: true, user });
     } else {
-      return res.json({ error: "Wrong Password" });
+      return res.json({ error: "A senha informada está incorreta." });
     }
   });
 };

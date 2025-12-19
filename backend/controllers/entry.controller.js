@@ -67,7 +67,6 @@ export const guardianMessage = async (req, res) => {
     }
     }
 
-    console.log(latest.emotional_state)
     const motivation_style = latest.motivation_style
     res.json({message, motivation_style, type})
 }

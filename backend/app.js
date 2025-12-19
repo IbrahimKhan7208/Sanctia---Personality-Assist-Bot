@@ -28,8 +28,12 @@ app.use("/entries", entryRoute);
 app.post("/analyze", aiRoute);
 app.use("/user", userRoute);
 
-app.get("/health", (_, res) => {
-  res.status(200).send("OK")
+app.get("/health", (req, res) => {
+  res.status(200).json({
+    status: "ok",
+    uptime: process.uptime(),
+    timestamp: new Date().toISOString(),
+  });
 })
 
 app.listen(port, (req, res) => {

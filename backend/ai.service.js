@@ -1,11 +1,13 @@
 import Groq from "groq-sdk";
 import { z } from "zod";
-import { zodToJsonSchema } from "zod-to-json-schema";
 
-const resultSchema = z.object({
+const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+
+const successSchema = z.object({
   mbti_type: z.string(),
   communication_style: z.string(),
   emotional_tone: z.string(),
+
   emotional_state: z.enum([
     "Calm",
     "Overwhelmed",
@@ -13,7 +15,9 @@ const resultSchema = z.object({
     "Drained",
     "Anxious",
   ]),
+
   sensitivity_level: z.enum(["Low", "Moderate", "High"]),
+
   motivation_style: z.enum([
     "Gentle Encouragement",
     "Structured Guidance",
@@ -21,70 +25,98 @@ const resultSchema = z.object({
     "Playful Challenge",
     "Accountability Forward",
   ]),
+
   strengths: z.array(z.string()),
   growth_points: z.array(z.string()),
   lifestyle_hint: z.string(),
   fashion_hint: z.string(),
   jewelry_hint: z.string(),
+
+  error: z.null(),
 });
 
-const jsonSchema = zodToJsonSchema(resultSchema, "result");
+const errorSchema = z.object({
+  mbti_type: z.string(),
+  communication_style: z.string(),
+  emotional_tone: z.string(),
+  emotional_state: z.string(),
+  sensitivity_level: z.string(),
+  motivation_style: z.string(),
+  strengths: z.array(z.string()),
+  growth_points: z.array(z.string()),
+  lifestyle_hint: z.string(),
+  fashion_hint: z.string(),
+  jewelry_hint: z.string(),
+  error: z.string(),
+});
 
-const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+const semanticErrorFallback = {
+  mbti_type: "",
+  communication_style: "",
+  emotional_tone: "",
+  emotional_state: "",
+  sensitivity_level: "",
+  motivation_style: "",
+  strengths: [],
+  growth_points: [],
+  lifestyle_hint: "",
+  fashion_hint: "",
+  jewelry_hint: "",
+  error:
+    "O texto não parece conter pensamentos ou emoções suficientes para uma análise significativa.",
+};
 
 export async function llmCall(prompt) {
-  const userQuery = prompt
-
   const completions = await groq.chat.completions.create({
+    model: "llama-3.3-70b-versatile",
+    response_format: { type: "json_object" },
     messages: [
       {
         role: "system",
-        content: `You are SANCTIA — The Human Haven’s Personality & Lifestyle Analysis Model.
+        content: `
+                  You are SANCTIA — The Human Haven’s Personality & Lifestyle Analysis Model.
 
-                  Your task is to analyze a user's writing sample (300–1000 characters).
+                  Your task is to analyze a user's reflective writing sample (300–1000 characters).
 
                   IMPORTANT LANGUAGE RULE:
                   - ALL descriptive text must be written in Brazilian Portuguese (PT-BR).
-                  - For mbti_type you can use Personality Type Code or Four-Letter Type Code within the context of the Myers-Briggs Type Indicator (MBTI)
-                  - ALL enum values MUST remain in English exactly as defined.
                   - JSON keys MUST remain in English.
+                  - Enum values MUST remain in English exactly as defined.
                   - Do NOT translate enum values.
                   - Do NOT change casing.
                   - Do NOT invent new enum values.
 
-                  If the input is outside this range, DO NOT generate an analysis.
-                  Return the following JSON instead:
+                  If the input meets the character requirement BUT is semantically meaningless
+                  (e.g. random characters, keyboard mashing, repeated letters, incoherent text,
+                  or lacks emotional/reflection depth):
+
+                  Return this JSON:
 
                   {
                     "mbti_type": "",
                     "communication_style": "",
                     "emotional_tone": "",
-                    "emotional_state": [],
-                    "sensitivity_level": [],
-                    "motivation_style": [],
+                    "emotional_state": "",
+                    "sensitivity_level": "",
+                    "motivation_style": "",
                     "strengths": [],
                     "growth_points": [],
                     "lifestyle_hint": "",
                     "fashion_hint": "",
                     "jewelry_hint": "",
-                    "error": "O texto precisa ter entre 300 e 1000 caracteres para uma análise precisa."
+                    "error": "O texto não parece conter pensamentos ou emoções suficientes para uma análise significativa."
                   }
 
-                  If the input IS valid:
-                  Respond ONLY with a JSON object in the EXACT structure below:
+                  If the input IS valid, respond ONLY with this structure:
 
                   {
                     "mbti_type": "string (Portuguese)",
                     "communication_style": "string (Portuguese)",
                     "emotional_tone": "string (Portuguese)",
 
-                    "emotional_state": ONE of:
-                      "Calm" | "Overwhelmed" | "Lonely" | "Drained" | "Anxious",
-
-                    "sensitivity_level": ONE of:
-                      "Low" | "Moderate" | "High",
-
-                    "motivation_style": ONE of:
+                    "emotional_state": "Calm" | "Overwhelmed" | "Lonely" | "Drained" | "Anxious",
+                    "sensitivity_level": "Low" | "Moderate" | "High",
+                    "motivation_style":
                       "Gentle Encouragement" |
                       "Structured Guidance" |
                       "Calm Reassurance" |
@@ -100,40 +132,40 @@ export async function llmCall(prompt) {
                   }
 
                   Rules:
-                  - Output ONLY valid JSON.
-                  - No explanations.
-                  - No markdown.
-                  - No extra text.
-                  - Maintain a calm, warm, emotionally intelligent tone.
-                  - Avoid clinical or robotic language.
-                  - All fields must always be present.
-
-                  Enum Rules (VERY IMPORTANT):
-                  - Enum values are PROGRAM CONTROL SIGNALS.
-                  - They must remain EXACTLY as written.
-                  - Do NOT translate them into Portuguese.
-                  - Do NOT add adjectives or variations.
-                  `,
+                  - Output ONLY valid JSON
+                  - No explanations
+                  - No markdown
+                  - No extra text
+                  - Maintain a calm, warm, emotionally intelligent tone
+        `,
       },
       {
         role: "user",
-        content: userQuery,
+        content: prompt,
       },
     ],
-    model: "llama-3.3-70b-versatile",
-    response_format: { type: "json_object" },
   });
 
-  const result = completions.choices[0].message.content;
+  let parsed;
+  try {
+    parsed = JSON.parse(completions.choices[0].message.content);
+  } catch {
+    return semanticErrorFallback;
+  }
 
-  const jsonData = JSON.parse(result);
+  const successCheck = successSchema.safeParse(parsed);
+  if (successCheck.success) {
+    return successCheck.data;
+  }
 
-  const validateData = resultSchema.parse(jsonData);
+  const errorCheck = errorSchema.safeParse(parsed);
+  if (errorCheck.success) {
+    return errorCheck.data;
+  }
 
-  // console.log(validateData)
-  // console.log(result);
-  return result;
+  return semanticErrorFallback;
 }
+
 
 // I usually like to keep my circle small. I enjoy late-night deep conversations about ideas, creativity, and the future. I prefer texting over calling, and I take time to respond because I like thinking before I speak. I get motivated by learning new things and improving myself every day. I dislike noisy environments and I mostly recharge when I’m alone.
 

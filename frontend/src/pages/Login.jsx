@@ -3,10 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { LuSparkles, LuLoader } from "react-icons/lu";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import posthog from "posthog-js";
 
 const Login = () => {
   const [form, setform] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
   const navigate = useNavigate();
 
   const changeHandler = (e) => {
@@ -25,37 +27,59 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const res = await axios.post("/api/user/login", demoCredentials, {
-        withCredentials: true,
-      });
+      const res = await axios.post(
+        "/api/user/login",
+        demoCredentials,
+        {
+          withCredentials: true,
+        }
+      );
 
       setLoading(false);
-
+      console.log("Hello", res.data)
       if (res.data.error) {
         setErrorMsg(res.data.error);
       } else {
+        posthog.capture("demo_login_success");
         navigate("/home", { state: res.data });
       }
     } catch (err) {
       setLoading(false);
+
+      if (err.response && err.response.status === 429) {
+        setErrorMsg(err.response.data.message);
+        return;
+      }
+
       setErrorMsg("Erro ao acessar a conta de demonstração.");
     }
-  };
 
-  const [errorMsg, setErrorMsg] = useState("");
+  };
 
   const submitHandler = async (e) => {
     e.preventDefault();
     setErrorMsg("");
     setLoading(true);
-    const res = await axios.post("/api/user/login", form, {
-      withCredentials: true,
-    });
-    setLoading(false);
-    if (res.data.error) {
-      setErrorMsg(res.data.error);
-    } else {
-      navigate("/home", { state: res.data });
+    try {
+      const res = await axios.post("/api/user/login", form, {
+        withCredentials: true,
+      });
+      setLoading(false);
+      if (res.data.error) {
+        setErrorMsg(res.data.error);
+      } else {
+        posthog.capture("login_success");
+        navigate("/home", { state: res.data });
+      }
+    } catch (err) {
+      setLoading(false);
+
+      if (err.response && err.response.status === 429) {
+        setErrorMsg(err.response.data.message);
+        return;
+      }
+
+      setErrorMsg("Erro ao acessar a conta de demonstração.");
     }
   };
 
@@ -72,7 +96,7 @@ const Login = () => {
       </div>
 
       {/* Card */}
-      <div className="absolute mt-5 top-1/2 left-1/2 -translate-x-[50%] -translate-y-[50%] p-4 w-1/4 bg-white rounded-xl shadow-purple-400 shadow h-fit text-purple-500 font-semibold tracking-tight">
+      <div className="absolute mt-5 top-1/2 left-1/2 -translate-x-[50%] -translate-y-[50%] p-4 w-fit bg-white rounded-xl shadow-purple-400 shadow h-fit text-purple-500 font-semibold tracking-tight">
         <form onSubmit={submitHandler} autoComplete="off">
           {/* Heading */}
           <div className="p-2 mb-4">
@@ -93,6 +117,7 @@ const Login = () => {
             placeholder="name@example.com"
             onChange={changeHandler}
             className="mb-4 p-2 h-12 w-full border rounded-xl outline-none"
+            required
           />
 
           {/* Password */}
@@ -103,10 +128,11 @@ const Login = () => {
             name="password"
             onChange={changeHandler}
             className="mb-4 p-2 h-12 w-full border rounded-xl outline-none"
+            required
           />
 
           {/* Footer */}
-          <div className="flex justify-between items-center mt-5">
+          <div className="flex justify-between items-center gap-10 mt-5">
             <Link to="/signup" className="text-indigo-400 underline">
               Ainda não tem uma conta?
             </Link>
@@ -131,15 +157,19 @@ const Login = () => {
 
         <div className="border-t border-zinc-300 mt-5 mb-5"></div>
 
-        <div className="flex-col mt-2 items-center flex">
+        <div className="flex flex-col items-center gap-2 mt-3">
           <button
             onClick={demoHandler}
-            className="bg-orange-300 rounded-xl p-3 text-purple-700 border-2 cursor-pointer hover:bg-orange-400 duration-200"
+            className="px-6 py-3 rounded-full  text-purple-700 
+               bg-amber-100 border border-purple-200 
+               hover:bg-amber-200 hover:border-purple-400 
+               transition-all cursor-pointer"
           >
-            Try Demo
+            Entrar como convidado
           </button>
-          <p className="text-xs text-purple-600/60 text-center mt-2">
-            Sem cadastro. Apenas uma experiência guiada.
+
+          <p className="text-xs text-purple-600/60 text-center max-w-xs">
+            Explore o Sanctia com um exemplo guiado — sem criar conta.
           </p>
         </div>
       </div>

@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { LuSparkles, LuLoader } from "react-icons/lu";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import posthog from "posthog-js"
 
 const Signup = () => {
   const [form, setform] = useState({ name: "", email: "", password: "" });
@@ -33,10 +34,18 @@ const Signup = () => {
       if (res.data.error) {
         setErrorMsg(res.data.error);
       } else {
+        posthog.capture("signup_success")
         navigate("/home", { state: res.data });
       }
     } catch (err) {
-      setErrorMsg("Something went wrong. Try again.");
+      setLoading(false);
+
+      if (err.response && err.response.status === 429) {
+        setErrorMsg(err.response.data.message);
+        return;
+      }
+
+      setErrorMsg("Erro ao acessar a conta de demonstração.");
     }
   };
 
@@ -55,7 +64,8 @@ const Signup = () => {
       {/* Form Container */}
       <div
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 
-                    w-1/4 p-4 bg-white rounded-xl shadow shadow-purple-400 
+                    w-full max-w-md p-4
+                    bg-white rounded-xl shadow shadow-purple-400 
                     text-purple-500 font-semibold tracking-tight"
       >
         <form onSubmit={submitHandler} autoComplete="off">
@@ -74,6 +84,7 @@ const Signup = () => {
             placeholder="John Doe"
             onChange={changeHandler}
             className="mb-4 p-2 h-12 w-full border rounded-xl outline-none"
+            required
           />
 
           {/* Email */}
@@ -84,6 +95,7 @@ const Signup = () => {
             placeholder="nome@exemplo.com"
             onChange={changeHandler}
             className="mb-4 p-2 h-12 w-full border rounded-xl outline-none"
+            required
           />
 
           {/* Password */}
@@ -93,6 +105,7 @@ const Signup = () => {
             name="password"
             onChange={changeHandler}
             className="mb-4 p-2 h-12 w-full border rounded-xl outline-none"
+            required
           />
 
           {/* Actions */}
